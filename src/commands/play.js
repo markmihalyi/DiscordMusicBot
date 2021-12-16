@@ -52,10 +52,10 @@ export default {
       //.setURL('zene/videó url')
       .addFields(
         { name: '\u200B', value: '\u200B' },
-        { name: 'hossz', value: 'Some value here', inline: true },
-        { name: 'Inline field title', value: 'Some value here', inline: true }
+        { name: 'hossz', value: 'hossz', inline: true },
+        { name: 'likeok', value: 'likeok', inline: true }
       )
-      .addField('Inline field title', 'Some value here', true)
+      .addField('habla heble xds', 'habla heble xds', true)
       .setImage(youtube.thumbnail(url))
       .setTimestamp()
       .setFooter('Developed by: 𝗠𝗜𝗚𝗘𝗟#2059');
