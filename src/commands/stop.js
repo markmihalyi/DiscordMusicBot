@@ -5,6 +5,7 @@ const data = new SlashCommandBuilder()
   .setName('stop')
   .setDescription('Leállítja az éppen aktuális zenét.');
 
+// TODO: megcsinálni, hogy /stop-nál ne fagyja szét magát a program
 export default {
   data: data,
   async execute(interaction) {

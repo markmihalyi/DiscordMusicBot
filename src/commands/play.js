@@ -1,7 +1,7 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
 import audioPlayer from '../misc/audioPlayer.js';
 import { MessageEmbed } from 'discord.js';
-import youtube from '../misc/youtubeMisc.js';
+import youtube from '../misc/youtubeApi.js';
 
 const data = new SlashCommandBuilder()
   .setName('play')
@@ -13,10 +13,12 @@ const data = new SlashCommandBuilder()
       .setRequired(true)
   );
 
-const queue = new Map(); // todo
+//! Lehet nem kell a channel info legfelül, de majd meglátod
 
-// todo: url ellenőrzése, hogy tényleg url-e
-// todo: timestamp-tól induljon a zene
+const queue = new Map(); // TODO: queue
+
+// TODO: url ellenőrzése, hogy tényleg url-e
+// TODO: timestamp-tól induljon a zene
 
 export default {
   data: data,
@@ -41,20 +43,25 @@ export default {
 
     audioPlayer.play(url);
 
-    //return await interaction.reply(`**${interaction.user}** elindított egy zenét. \n(${url})`);
+    const videoData = await youtube.getVideoData(url);
+    const channelData = await youtube.getChannelData(videoData);
 
     const embed = new MessageEmbed()
       .setColor('#A91E00')
-      //.setAuthor('csatorna neve', 'csatorna kép URL', 'csatorna URL')
-      .setTitle('zene/videó neve')
-      //.setURL('zene/videó url')
+      .setAuthor(
+        youtube.getChannelName(channelData),
+        youtube.getChannelAvatar(channelData),
+        youtube.getChannelUrl(channelData)
+      )
+      .setTitle(youtube.getVideoTitle(videoData))
+      .setURL(youtube.getVideoUrl(videoData))
       .addFields(
         { name: '\u200B', value: '\u200B' },
-        { name: 'hossz', value: 'hossz', inline: true },
-        { name: 'likeok', value: 'likeok', inline: true }
+        { name: youtube.getVideoDuration(videoData), value: 'időtartam', inline: true },
+        { name: youtube.getVideoViewCount(videoData), value: 'megtekintés', inline: true }
       )
-      .addField('habla heble xds', 'habla heble xds', true)
-      .setImage(youtube.thumbnail(url))
+      .addField(youtube.getVideoUploadDate(videoData), 'feltöltés dátuma', true)
+      .setImage(youtube.getVideoThumbnail(videoData))
       .setTimestamp()
       .setFooter('Developed by: 𝗠𝗜𝗚𝗘𝗟#2059');
 
