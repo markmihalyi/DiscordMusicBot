@@ -56,7 +56,6 @@ export default {
       .setTitle(youtube.getVideoTitle(videoData))
       .setURL(youtube.getVideoUrl(videoData))
       .addFields(
-        { name: '\u200B', value: '\u200B' },
         { name: youtube.getVideoDuration(videoData), value: 'időtartam', inline: true },
         { name: youtube.getVideoViewCount(videoData), value: 'megtekintés', inline: true }
       )
