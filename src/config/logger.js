@@ -12,7 +12,7 @@ const startText = '--- A bot elindult ---';
 writeToFile(startText);
 
 const getTimeStamp = () => {
-  return new Date().toISOString();
+  return new Date().toLocaleString('hu-HU', { timeZone: 'Europe/Budapest' });
 };
 
 const info = (namespace, message, object) => {
