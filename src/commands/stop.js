@@ -5,10 +5,12 @@ const data = new SlashCommandBuilder()
   .setName('stop')
   .setDescription('Leállítja az éppen aktuális zenét.');
 
-// TODO: megcsinálni, hogy /stop-nál ne fagyja szét magát a program
 export default {
   data: data,
   async execute(interaction) {
+    if (!audioPlayer.isActive()) {
+      return await interaction.reply('Nincs folyamatban lévő zene.');
+    }
     audioPlayer.stop();
     return await interaction.reply('A zene lejátszása le lett állítva.');
   },

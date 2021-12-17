@@ -9,17 +9,24 @@ import {
 
 const player = createAudioPlayer();
 
+var connectionActive;
+
+function isActive() {
+  return connectionActive;
+}
+
+var connection;
+
 function connect(connectionData) {
-  const connection = joinVoiceChannel({
+  connection = joinVoiceChannel({
     channelId: connectionData.channelId,
     guildId: connectionData.guildId,
     adapterCreator: connectionData.adapterCreator,
   });
 
+  connectionActive = true;
+
   connection.subscribe(player);
-  try {
-    player.on(AudioPlayerStatus.Idle, () => connection.destroy());
-  } catch {}
 }
 
 function play(url) {
@@ -29,12 +36,16 @@ function play(url) {
 }
 
 function stop() {
-  try {
-    player.stop();
-  } catch {}
+  player.stop();
+  connectionActive = false;
 }
 
+player.on(AudioPlayerStatus.Idle, () => {
+  connection.destroy();
+});
+
 export default {
+  isActive: isActive,
   connect: connect,
   play: play,
   stop: stop,

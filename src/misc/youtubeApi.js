@@ -24,6 +24,17 @@ moment.updateLocale('en', {
 });
 
 // API segédfüggvények
+function validateYouTubeUrl(url) {
+  if (url) {
+    var regExp =
+      /^(?:https?:\/\/)?(?:m\.|www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((\w|-){11})(?:\S+)?$/;
+    if (regExp.test(url)) {
+      return true;
+    }
+  }
+  return false;
+}
+
 function getVideoId(url) {
   const results = url.match('[\\?&]v=([^&#]*)');
   return results == undefined ? url : results[1];
@@ -121,6 +132,7 @@ function getVideoThumbnail(videoData, size) {
 }
 
 export default {
+  validateYouTubeUrl,
   getVideoId,
   getVideoData,
   getChannelData,

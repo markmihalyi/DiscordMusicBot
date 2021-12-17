@@ -13,11 +13,8 @@ const data = new SlashCommandBuilder()
       .setRequired(true)
   );
 
-//! Lehet nem kell a channel info legfelül, de majd meglátod
-
 const queue = new Map(); // TODO: queue
 
-// TODO: url ellenőrzése, hogy tényleg url-e
 // TODO: timestamp-tól induljon a zene
 
 export default {
@@ -25,10 +22,21 @@ export default {
   async execute(interaction, client) {
     const url = interaction.options.getString('url');
 
-    const userChannel = interaction.member.voice.channel;
+    // Ha a link nem érvényes youtube link
+    if (!youtube.validateYouTubeUrl(url)) {
+      return await interaction.reply('A megadott link érvénytelen.');
+    }
+
+    const videoData = await youtube.getVideoData(url);
+
+    // Ha a youtube link érvényes, viszont az id érvénytelen
+    if (videoData.pageInfo.totalResults == 0) {
+      return await interaction.reply('Ez a videó nem létezik.');
+    }
 
     // Ha nincs voice channelben a bot
     if (JSON.stringify(client.voice) == '{"adapters":{}}') {
+      const userChannel = interaction.member.voice.channel;
       // Ha nincs voice channelben a felhasználó
       if (!userChannel) {
         return await interaction.reply('Először csatlakozz egy voice channel-hez!');
@@ -43,7 +51,6 @@ export default {
 
     audioPlayer.play(url);
 
-    const videoData = await youtube.getVideoData(url);
     const channelData = await youtube.getChannelData(videoData);
 
     const embed = new MessageEmbed()
