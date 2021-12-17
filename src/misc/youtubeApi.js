@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { youtube_api_key } from '../config.js';
+import { youtube_api_key } from '../config/config.js';
 import moment from 'moment';
 import momentDurationFormatSetup from 'moment-duration-format';
 

@@ -39,7 +39,7 @@ export default {
       const userChannel = interaction.member.voice.channel;
       // Ha nincs voice channelben a felhasználó
       if (!userChannel) {
-        return await interaction.reply('Először csatlakozz egy voice channel-hez!');
+        return await interaction.reply('Először csatlakozz egy hangcsatornához!');
       }
 
       audioPlayer.connect({

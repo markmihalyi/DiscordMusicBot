@@ -1,7 +1,11 @@
+import logger from '../config/logger.js';
+
+const NAMESPACE = 'EVENT';
+
 export default {
   name: 'ready',
   once: true,
   execute(client) {
-    console.log(`[✓] A bot készen áll. (${client.user.tag})`);
+    logger.info(NAMESPACE, `A bot készen áll. (${client.user.tag})`);
   },
 };

@@ -1,6 +1,6 @@
 import fs from 'node:fs';
 import { Client, Collection } from 'discord.js';
-import { token } from './config.js';
+import { token } from './config/config.js';
 
 // Kliens példány létrehozása
 const client = new Client({ intents: ['GUILDS', 'GUILD_VOICE_STATES'] });
