@@ -32,13 +32,11 @@ export default {
         return await interaction.reply('Először csatlakozz egy voice channel-hez!');
       }
 
-      const connectionData = {
+      audioPlayer.connect({
         channelId: userChannel.id,
         guildId: interaction.guild.id,
         adapterCreator: interaction.guild.voiceAdapterCreator,
-      };
-
-      audioPlayer.connect(connectionData);
+      });
     }
 
     audioPlayer.play(url);
