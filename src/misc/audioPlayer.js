@@ -9,7 +9,6 @@ import {
 } from '@discordjs/voice';
 import logger from '../config/logger.js';
 
-// TODO: refactor -> function xy helyett const xy = () =>
 // TODO: /pause
 
 const NAMESPACE = 'AudioPlayer';
@@ -85,6 +84,17 @@ const addToQueue = (id, username, url) => {
   }
 };
 
+// Az aktuális zene szüneteltetése
+const pause = (username) => {
+  logger.info(NAMESPACE, `A most játszott zenét ${username} szüneteltette.`);
+  return player.pause(true);
+};
+
+const unpause = (username) => {
+  logger.info(NAMESPACE, `A zene lejátszása folytatódik, ${username} által.`);
+  return player.unpause();
+};
+
 // Az aktuális zene átugrása
 const skip = (username) => {
   logger.info(NAMESPACE, `${username} átugrotta a most játszott zenét.`);
@@ -122,6 +132,8 @@ export default {
   getQueueSize: getQueueSize,
   connect: connect,
   addToQueue: addToQueue,
+  pause: pause,
+  unpause: unpause,
   skip: skip,
   stop: stop,
 };

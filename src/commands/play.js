@@ -2,6 +2,7 @@ import { SlashCommandBuilder } from '@discordjs/builders';
 import audioPlayer from '../misc/audioPlayer.js';
 import { MessageEmbed } from 'discord.js';
 import youtube from '../misc/youtubeApi.js';
+import { color } from '../config/config.js';
 
 const data = new SlashCommandBuilder()
   .setName('play')
@@ -57,7 +58,7 @@ export default {
     const channelData = await youtube.getChannelData(videoData);
 
     const videoInfo = new MessageEmbed()
-      .setColor('#A91E00')
+      .setColor(color)
       .setAuthor(
         youtube.getChannelName(channelData),
         youtube.getChannelAvatar(channelData),

@@ -1,7 +1,8 @@
 import fs from 'node:fs';
-import { Client, Collection } from 'discord.js';
-import { token } from './config/config.js';
+import { Client, Collection, MessageEmbed } from 'discord.js';
+import { token, getDevelopmentMode, color } from './config/config.js';
 import logger from './config/logger.js';
+import dripCheck from './misc/dripCheck.js';
 
 const NAMESPACE = 'Main';
 
@@ -34,13 +35,21 @@ for (const file of commandFiles) {
   client.commands.set(command.default.data.name, command);
 }
 
-// Interakciók lekezelése
+// Parancshasználat lekezelése
 client.on('interactionCreate', async (interaction) => {
   if (!interaction.isCommand()) return;
 
   const command = client.commands.get(interaction.commandName);
 
   if (!command) return;
+
+  if (getDevelopmentMode() && !dripCheck(interaction)) {
+    const embed = new MessageEmbed()
+      .setColor(color)
+      .setDescription('Nem mentél át a drip checken. :weary:')
+      .setImage('https://c.tenor.com/hSriDKQclBQAAAAd/tomcat-polg%C3%A1r-tam%C3%A1s.gif');
+    return await interaction.reply({ embeds: [embed], ephemeral: true });
+  }
 
   try {
     await command.default.execute(interaction, client);

@@ -1,8 +1,5 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
-import logger from '../config/logger.js';
 import audioPlayer from '../misc/audioPlayer.js';
-
-const NAMESPACE = 'Skip';
 
 const data = new SlashCommandBuilder()
   .setName('skip')

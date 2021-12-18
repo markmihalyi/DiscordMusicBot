@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { youtube_api_key } from '../config/config.js';
+import { youtubeApiKey } from '../config/config.js';
 import moment from 'moment';
 import momentDurationFormatSetup from 'moment-duration-format';
 
@@ -51,7 +51,7 @@ async function getVideoData(url) {
       params: {
         part: 'snippet,contentDetails,statistics',
         id: videoId,
-        key: youtube_api_key,
+        key: youtubeApiKey,
       },
     })
     .catch((error) => {
@@ -70,7 +70,7 @@ async function getChannelData(videoData) {
       params: {
         part: 'snippet',
         id: channelId,
-        key: youtube_api_key,
+        key: youtubeApiKey,
       },
     })
     .catch((error) => {
