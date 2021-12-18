@@ -113,7 +113,7 @@ player.on(AudioPlayerStatus.Idle, () => {
     logger.info(NAMESPACE, 'A bot inaktivitás miatt lecsatlakozott.');
     console.log(connection.state);
     return connection.destroy();
-  }, 10_000);
+  }, 30_000);
 });
 
 export default {
