@@ -9,6 +9,8 @@ import {
 } from '@discordjs/voice';
 import logger from '../config/logger.js';
 
+// TODO: /pause
+
 const NAMESPACE = 'AudioPlayer';
 
 const player = createAudioPlayer({
@@ -17,16 +19,18 @@ const player = createAudioPlayer({
   },
 });
 
-var resource;
+const queue = new Map();
 
 var connectionActive;
 
+// Visszaadja bool-ként, hogy megy-e éppen zene
 function isActive() {
   return connectionActive;
 }
 
 var connection;
 
+// Csatlakozás a hangcsatornához
 function connect(connectionData) {
   connection = joinVoiceChannel({
     channelId: connectionData.channelId,
@@ -43,6 +47,9 @@ function connect(connectionData) {
   );
 }
 
+var resource;
+
+// Zene lejátszása - /play
 function play(url) {
   connectionActive = true;
   const stream = ytdl(url, { filter: 'audioonly' });
@@ -52,6 +59,7 @@ function play(url) {
   logger.info(NAMESPACE, `A bot lejátszott egy zenét. (Link: ${url})`);
 }
 
+// Zene megállítása - /stop
 function stop() {
   player.stop();
   connectionActive = false;
@@ -69,6 +77,7 @@ player.on(AudioPlayerStatus.Idle, () => {
 });
 
 export default {
+  queue: queue,
   isActive: isActive,
   connect: connect,
   play: play,

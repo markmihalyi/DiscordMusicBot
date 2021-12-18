@@ -13,8 +13,6 @@ const data = new SlashCommandBuilder()
       .setRequired(true)
   );
 
-const queue = new Map(); // TODO: queue
-
 // TODO: timestamp-tól induljon a zene
 
 export default {
