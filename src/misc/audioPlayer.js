@@ -44,6 +44,7 @@ function connect(connectionData) {
 }
 
 function play(url) {
+  connectionActive = true;
   const stream = ytdl(url, { filter: 'audioonly' });
   resource = createAudioResource(stream, { inputType: StreamType.Arbitrary });
   player.play(resource);
@@ -60,6 +61,7 @@ function stop() {
 
 // Ha nincs zene lejátszva 30 másodpercig, automatikusan kilép
 player.on(AudioPlayerStatus.Idle, () => {
+  connectionActive = false;
   setTimeout(() => {
     logger.info(NAMESPACE, 'A bot inaktivitás miatt lecsatlakozott.');
     return connection.destroy();
