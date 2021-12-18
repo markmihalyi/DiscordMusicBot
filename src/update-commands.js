@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import { REST } from '@discordjs/rest';
 import { Routes } from 'discord-api-types/v9';
-import { clientId, guildId, token } from './config.js';
+import { clientId, guildId, token } from './config/config.js';
 
 // A 'commands' nevű mappában lévő .js fájlokat
 const commands = [];

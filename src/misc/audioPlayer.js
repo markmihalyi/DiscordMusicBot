@@ -21,21 +21,17 @@ const player = createAudioPlayer({
 });
 
 // Visszaadja a lejátszó állapotát
-function getPlayerStatus() {
-  return player.state.status;
-}
+const getPlayerStatus = () => player.state.status;
 
 var connectionActive;
 
 // Visszaadja bool-ként, hogy megy-e éppen zene
-function isActive() {
-  return connectionActive;
-}
+const isConnectionActive = () => connectionActive;
 
 var connection;
 
 // Csatlakozás a hangcsatornához
-function connect(connectionData) {
+const connect = (connectionData) => {
   connection = joinVoiceChannel({
     channelId: connectionData.channelId,
     guildId: connectionData.guildId,
@@ -49,19 +45,17 @@ function connect(connectionData) {
     NAMESPACE,
     `A bot csatlakozott egy hangcsatornához. (ID: ${connectionData.channelId})`
   );
-}
+};
 
 const queue = new Map();
 
 // Visszaadja hány zene van a lejátszási listában
-function getQueueSize() {
-  return queue.size;
-}
+const getQueueSize = () => queue.size;
 
 var resource;
 
 // A soron következő zene lejátszása, ha van zene a listában
-function playQueue() {
+const playQueue = () => {
   if (queue.size > 0) {
     connectionActive = true;
     const data = queue.entries().next();
@@ -76,10 +70,10 @@ function playQueue() {
     return true;
   }
   return false;
-}
+};
 
 // Zene hozzáadása a lejátszási listához
-function addToQueue(id, username, url) {
+const addToQueue = (id, username, url) => {
   queue.set(id, { user: username, url: url });
   logger.info(NAMESPACE, `${username} hozzadott egy zenét a lejátszási listához. (Link: ${url})`);
 
@@ -87,15 +81,24 @@ function addToQueue(id, username, url) {
   if (player.state.status == 'idle') {
     playQueue();
   }
-}
+};
+
+// Az aktuális zene átugrása
+const skip = (username) => {
+  logger.info(NAMESPACE, `${username} átugrotta a most játszott zenét.`);
+  return playQueue();
+};
 
 // Zene megállítása - /stop
-function stop(user) {
+const stop = (username, skipped = false) => {
   player.stop();
   connectionActive = false;
 
-  logger.info(NAMESPACE, `${user} megállította a zene lejátszását.`);
-}
+  if (skipped) {
+    return logger.info(NAMESPACE, `${username} átugrotta a most játszott zenét.`);
+  }
+  return logger.info(NAMESPACE, `${username} megállította a zene lejátszását.`);
+};
 
 // Ha nincs zene lejátszva 30 másodpercig, automatikusan kilép
 player.on(AudioPlayerStatus.Idle, () => {
@@ -103,7 +106,7 @@ player.on(AudioPlayerStatus.Idle, () => {
   if (playQueue()) return;
 
   connectionActive = false;
-  return setTimeout(() => {
+  setTimeout(() => {
     logger.info(NAMESPACE, 'A bot inaktivitás miatt lecsatlakozott.');
     return connection.destroy();
   }, 30_000);
@@ -111,9 +114,10 @@ player.on(AudioPlayerStatus.Idle, () => {
 
 export default {
   getPlayerStatus: getPlayerStatus,
+  isConnectionActive: isConnectionActive,
   getQueueSize: getQueueSize,
-  isActive: isActive,
   connect: connect,
   addToQueue: addToQueue,
+  skip: skip,
   stop: stop,
 };
