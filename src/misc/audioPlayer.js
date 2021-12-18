@@ -95,6 +95,7 @@ const skip = (username) => {
 const stop = (username, skipped = false) => {
   player.stop();
   connectionActive = false;
+  connection.destroy();
 
   if (skipped) {
     return logger.info(NAMESPACE, `${username} átugrotta a most játszott zenét.`);
@@ -110,8 +111,9 @@ player.on(AudioPlayerStatus.Idle, () => {
   connectionActive = false;
   setTimeout(() => {
     logger.info(NAMESPACE, 'A bot inaktivitás miatt lecsatlakozott.');
+    console.log(connection.state);
     return connection.destroy();
-  }, 30_000);
+  }, 10_000);
 });
 
 export default {
