@@ -1,6 +1,9 @@
 import fs from 'node:fs';
 import { Client, Collection } from 'discord.js';
 import { token } from './config/config.js';
+import logger from './config/logger.js';
+
+const NAMESPACE = 'Main';
 
 // Kliens példány létrehozása
 const client = new Client({ intents: ['GUILDS', 'GUILD_VOICE_STATES'] });
@@ -42,7 +45,7 @@ client.on('interactionCreate', async (interaction) => {
   try {
     await command.default.execute(interaction, client);
   } catch (error) {
-    console.error(error);
+    logger.error(NAMESPACE, error);
     await interaction.reply({
       content: 'Hiba történt, keress fel! `𝗠𝗜𝗚𝗘𝗟#2059`',
       ephemeral: true,

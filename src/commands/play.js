@@ -13,6 +13,7 @@ const data = new SlashCommandBuilder()
       .setRequired(true)
   );
 
+// TODO: szebb üzenetek (hasonló embeddel kéne)
 // TODO: timestamp-tól induljon a zene
 
 export default {
@@ -32,9 +33,9 @@ export default {
       return await interaction.reply('Ez a videó nem létezik.');
     }
 
+    const userChannel = interaction.member.voice.channel;
     // Ha nincs voice channelben a bot
     if (JSON.stringify(client.voice) == '{"adapters":{}}') {
-      const userChannel = interaction.member.voice.channel;
       // Ha nincs voice channelben a felhasználó
       if (!userChannel) {
         return await interaction.reply('Először csatlakozz egy hangcsatornához!');
@@ -47,11 +48,15 @@ export default {
       });
     }
 
-    audioPlayer.play(url);
+    const status = audioPlayer.getPlayerStatus();
+
+    const id = audioPlayer.getQueueSize() + 1;
+    const username = interaction.member.user.username;
+    audioPlayer.addToQueue(id, username, url);
 
     const channelData = await youtube.getChannelData(videoData);
 
-    const embed = new MessageEmbed()
+    const videoInfo = new MessageEmbed()
       .setColor('#A91E00')
       .setAuthor(
         youtube.getChannelName(channelData),
@@ -65,10 +70,20 @@ export default {
         { name: youtube.getVideoViewCount(videoData), value: 'megtekintés', inline: true }
       )
       .addField(youtube.getVideoUploadDate(videoData), 'feltöltés dátuma', true)
-      .setImage(youtube.getVideoThumbnail(videoData))
+      .setImage(youtube.getVideoThumbnail(videoData, 'medium'))
       .setTimestamp()
       .setFooter('Developed by: 𝗠𝗜𝗚𝗘𝗟#2059');
 
-    return await interaction.reply({ embeds: [embed] });
+    if (id == 1 && status == 'idle') {
+      return await interaction.reply({
+        content: `\`         Elindult a zene lejátszása.          \``,
+        embeds: [videoInfo],
+      });
+    }
+
+    await interaction.reply({
+      content: `\`       Hozzáadva a lejátszási listához.       \`\n\`     Jelenleg a(z) ${id}. helyen van a sorban.    \``,
+      embeds: [videoInfo],
+    });
   },
 };

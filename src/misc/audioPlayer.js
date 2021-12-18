@@ -9,6 +9,7 @@ import {
 } from '@discordjs/voice';
 import logger from '../config/logger.js';
 
+// TODO: refactor -> function xy helyett const xy = () =>
 // TODO: /pause
 
 const NAMESPACE = 'AudioPlayer';
@@ -19,7 +20,10 @@ const player = createAudioPlayer({
   },
 });
 
-const queue = new Map();
+// Visszaadja a lejátszó állapotát
+function getPlayerStatus() {
+  return player.state.status;
+}
 
 var connectionActive;
 
@@ -47,39 +51,69 @@ function connect(connectionData) {
   );
 }
 
+const queue = new Map();
+
+// Visszaadja hány zene van a lejátszási listában
+function getQueueSize() {
+  return queue.size;
+}
+
 var resource;
 
-// Zene lejátszása - /play
-function play(url) {
-  connectionActive = true;
-  const stream = ytdl(url, { filter: 'audioonly' });
-  resource = createAudioResource(stream, { inputType: StreamType.Arbitrary });
-  player.play(resource);
+// A soron következő zene lejátszása, ha van zene a listában
+function playQueue() {
+  if (queue.size > 0) {
+    connectionActive = true;
+    const data = queue.entries().next();
+    const url = data.value[1].url;
+    const stream = ytdl(url, { filter: 'audioonly' });
+    resource = createAudioResource(stream, { inputType: StreamType.Arbitrary });
+    player.play(resource);
 
-  logger.info(NAMESPACE, `A bot lejátszott egy zenét. (Link: ${url})`);
+    logger.info(NAMESPACE, `A következő zene elindult. (Link: ${url})`);
+
+    queue.delete(data.value[0]);
+    return true;
+  }
+  return false;
+}
+
+// Zene hozzáadása a lejátszási listához
+function addToQueue(id, username, url) {
+  queue.set(id, { user: username, url: url });
+  logger.info(NAMESPACE, `${username} hozzadott egy zenét a lejátszási listához. (Link: ${url})`);
+
+  // Csak akkor indítsa el a következő zenét, ha nem megy semmi éppen
+  if (player.state.status == 'idle') {
+    playQueue();
+  }
 }
 
 // Zene megállítása - /stop
-function stop() {
+function stop(user) {
   player.stop();
   connectionActive = false;
 
-  logger.info(NAMESPACE, 'Valaki megállította a zene lejátszását.');
+  logger.info(NAMESPACE, `${user} megállította a zene lejátszását.`);
 }
 
 // Ha nincs zene lejátszva 30 másodpercig, automatikusan kilép
 player.on(AudioPlayerStatus.Idle, () => {
+  // Ha van a lejátszási listában valami, akkor induljon el
+  if (playQueue()) return;
+
   connectionActive = false;
-  setTimeout(() => {
+  return setTimeout(() => {
     logger.info(NAMESPACE, 'A bot inaktivitás miatt lecsatlakozott.');
     return connection.destroy();
   }, 30_000);
 });
 
 export default {
-  queue: queue,
+  getPlayerStatus: getPlayerStatus,
+  getQueueSize: getQueueSize,
   isActive: isActive,
   connect: connect,
-  play: play,
+  addToQueue: addToQueue,
   stop: stop,
 };

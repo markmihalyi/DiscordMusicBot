@@ -106,10 +106,10 @@ function getVideoUrl(videoData) {
 
 function getVideoDuration(videoData) {
   const durationData = videoData.items[0].contentDetails.duration;
-  // olvashatóvá kell konvertálni, mivel máshogy van tárolva
+
+  // olvashatóvá kell tenni, mivel máshogy van tárolva
   const durationFormatted = moment.duration(durationData).format('h:mm:ss').padStart(4, '0:0');
   const durationParts = durationFormatted.split(':');
-
   if (durationParts.length < 3) {
     return `${durationParts[0]}p ${durationParts[1]}mp`;
   }
@@ -117,7 +117,8 @@ function getVideoDuration(videoData) {
 }
 
 function getVideoViewCount(videoData) {
-  return videoData.items[0].statistics.viewCount;
+  const viewData = videoData.items[0].statistics.viewCount;
+  return viewData.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
 }
 
 function getVideoUploadDate(videoData) {
@@ -127,8 +128,9 @@ function getVideoUploadDate(videoData) {
 
 // size: default/medium/high/standard/maxres
 function getVideoThumbnail(videoData, size) {
-  if (!size) return videoData.items[0].snippet.thumbnails.maxres.url;
-  return videoData.items[0].snippet.thumbnails.maxres.size;
+  const thumbnails = videoData.items[0].snippet.thumbnails;
+  if (!size) return thumbnails.default.url;
+  return thumbnails[size].url;
 }
 
 export default {

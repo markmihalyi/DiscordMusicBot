@@ -11,7 +11,8 @@ export default {
     if (!audioPlayer.isActive()) {
       return await interaction.reply('Nincs folyamatban lévő zene.');
     }
-    audioPlayer.stop();
+    const user = interaction.member.user.username;
+    audioPlayer.stop(user);
     return await interaction.reply('A zene lejátszása le lett állítva.');
   },
 };
