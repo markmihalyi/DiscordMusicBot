@@ -38,13 +38,15 @@ const connect = (connectionData) => {
     adapterCreator: connectionData.adapterCreator,
   });
 
-  connectionActive = true;
-  connection.subscribe(player);
+  if (!connectionActive) {
+    logger.info(
+      NAMESPACE,
+      `A bot csatlakozott egy hangcsatornához. (ID: ${connectionData.channelId})`
+    );
+  }
 
-  logger.info(
-    NAMESPACE,
-    `A bot csatlakozott egy hangcsatornához. (ID: ${connectionData.channelId})`
-  );
+  connectionActive = true;
+  return connection.subscribe(player);
 };
 
 const queue = new Map();

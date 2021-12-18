@@ -1,6 +1,6 @@
 import logger from '../config/logger.js';
 
-const NAMESPACE = 'EVENT';
+const NAMESPACE = 'Event';
 
 export default {
   name: 'ready',
