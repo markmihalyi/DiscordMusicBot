@@ -58,18 +58,13 @@ function stop() {
   logger.info(NAMESPACE, 'Valaki megállította a zene lejátszását.');
 }
 
+// Ha nincs zene lejátszva 30 másodpercig, automatikusan kilép
 player.on(AudioPlayerStatus.Idle, () => {
   setTimeout(() => {
     logger.info(NAMESPACE, 'A bot inaktivitás miatt lecsatlakozott.');
     return connection.destroy();
-  }, 10_000);
+  }, 30_000);
 });
-
-/* todo: számol és x időnél kilép
-player.on(AudioPlayerStatus.Idle, () => {
-  connection.destroy();
-});
-*/
 
 export default {
   isActive: isActive,
