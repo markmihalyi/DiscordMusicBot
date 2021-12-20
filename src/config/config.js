@@ -24,6 +24,7 @@ const setDevelopmentMode = (bool) => {
     if (error)
       return logger.error(
         NAMESPACE,
+        undefined,
         'Nem sikerült felülírni a fejlesztői mód konfigurációját.',
         error
       );

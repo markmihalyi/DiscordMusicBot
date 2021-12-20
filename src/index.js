@@ -3,6 +3,7 @@ import { Client, Collection, MessageEmbed } from 'discord.js';
 import { token, color, getDevelopmentMode } from './config/config.js';
 import logger from './config/logger.js';
 import dripCheck from './misc/dripCheck.js';
+import Timeout from 'await-timeout';
 
 const NAMESPACE = 'Main';
 
@@ -37,13 +38,15 @@ for (const file of commandFiles) {
 
 // Parancshasználat lekezelése
 client.on('interactionCreate', async (interaction) => {
+  const guildId = interaction.guildId;
+  const guildName = interaction.guild.name;
+  await logger.createFileIfNotExist(`./logs/${guildId}.log`, guildName);
+
   if (!interaction.isCommand()) return;
 
   const command = client.commands.get(interaction.commandName);
 
   if (!command) return;
-
-  console.log('Dev mode:', getDevelopmentMode());
 
   if (getDevelopmentMode() && !dripCheck(interaction)) {
     const embed = new MessageEmbed()
@@ -56,7 +59,8 @@ client.on('interactionCreate', async (interaction) => {
   try {
     await command.default.execute(interaction, client);
   } catch (error) {
-    logger.error(NAMESPACE, error);
+    const guildId = interaction.guildId;
+    logger.error(NAMESPACE, guildId, 'Hiba történt.', error);
     await interaction.reply({
       content: 'Hiba történt, keress fel! `𝗠𝗜𝗚𝗘𝗟#2059`',
       ephemeral: true,

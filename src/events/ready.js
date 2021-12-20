@@ -6,6 +6,6 @@ export default {
   name: 'ready',
   once: true,
   execute(client) {
-    logger.info(NAMESPACE, `A bot készen áll. (${client.user.tag})`);
+    logger.cons(NAMESPACE, `A bot készen áll. (${client.user.tag})`);
   },
 };

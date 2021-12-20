@@ -2,6 +2,6 @@ images
 node_modules
 .env
 package-lock.json
-latest.log
+*.log
 devmode.json
 devmode.txt

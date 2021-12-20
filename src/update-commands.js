@@ -3,6 +3,7 @@ import { REST } from '@discordjs/rest';
 import { Routes } from 'discord-api-types/v9';
 import { clientId, guildId, token } from './config/config.js';
 
+//TODO: Mindegyik guilden menjen végig, frissítse az adatokat
 // A 'commands' nevű mappában lévő .js fájlokat
 const commands = [];
 const commandFiles = fs.readdirSync('./commands').filter((file) => file.endsWith('.js'));

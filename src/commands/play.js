@@ -14,6 +14,10 @@ const data = new SlashCommandBuilder()
       .setRequired(true)
   );
 
+//! FONTOS
+// TODO: más szerveren más queue legyen,
+// TODO: akár jsonnal is megoldhatod
+
 // TODO: szebb üzenetek (hasonló embeddel kéne)
 // TODO: timestamp-tól induljon a zene
 
