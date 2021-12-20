@@ -121,7 +121,6 @@ player.on(AudioPlayerStatus.Idle, () => {
   connectionActive = false;
   setTimeout(() => {
     logger.info(NAMESPACE, 'A bot inaktivitás miatt lecsatlakozott.');
-    console.log(connection.state);
     return connection.destroy();
   }, 30_000);
 });

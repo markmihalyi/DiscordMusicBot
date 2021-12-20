@@ -1,6 +1,6 @@
 import fs from 'node:fs';
 import { Client, Collection, MessageEmbed } from 'discord.js';
-import { token, getDevelopmentMode, color } from './config/config.js';
+import { token, color, getDevelopmentMode } from './config/config.js';
 import logger from './config/logger.js';
 import dripCheck from './misc/dripCheck.js';
 
@@ -42,6 +42,8 @@ client.on('interactionCreate', async (interaction) => {
   const command = client.commands.get(interaction.commandName);
 
   if (!command) return;
+
+  console.log('Dev mode:', getDevelopmentMode());
 
   if (getDevelopmentMode() && !dripCheck(interaction)) {
     const embed = new MessageEmbed()

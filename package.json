@@ -1,7 +1,7 @@
 {
-  "name": "plebanusbot",
+  "name": "discord-music-bot",
   "version": "1.0.0",
-  "description": "Több, mint discord bot. (amúgy nem xd)",
+  "description": "Discord Music Bot extrákkal.",
   "main": "src/index.js",
   "type": "module",
   "scripts": {
