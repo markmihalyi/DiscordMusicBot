@@ -3,7 +3,6 @@ import { Client, Collection, MessageEmbed } from 'discord.js';
 import { token, color, getDevelopmentMode } from './config/config.js';
 import logger from './config/logger.js';
 import dripCheck from './misc/dripCheck.js';
-import Timeout from 'await-timeout';
 
 const NAMESPACE = 'Main';
 
