@@ -1,2 +1,3 @@
-# Under development.
-The description will be available as soon as the bot's major features have been done.
+# Outdated Project
+
+I'm not planning to continue this project in the near future, so take that as an outdated project.
